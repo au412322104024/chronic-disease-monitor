@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chronic Disease Monitoring</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Health Monitoring Form</h2>
+    <form id="healthForm">
+      <input type="number" name="bp" placeholder="Blood Pressure (mmHg)" required>
+      <input type="number" name="sugar" placeholder="Blood Sugar (mg/dL)" required>
+      <input type="number" name="cholesterol" placeholder="Cholesterol (mg/dL)" required>
+      <input type="number" name="heart" placeholder="Heart Rate (BPM)" required>
+      <input type="number" name="spo2" placeholder="Oxygen Saturation (%)" required>
+      <input type="number" name="respiration" placeholder="Respiration Rate (breaths/min)" required>
+      <input type="number" name="weight" placeholder="Weight (kg)" required>
+      <input type="number" name="height" placeholder="Height (cm)" required>
+      <input type="number" name="temperature" placeholder="Body Temperature (°C)" required>
+      <button type="submit">Submit</button>
+    </form>
+    <div class="result" id="resultBox"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById("healthForm");
+    const resultBox = document.getElementById("resultBox");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+
+      const response = await fetch("/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.json();
+      resultBox.innerText = result.message;
+    });
+  </script>
+</body>
+</html>
